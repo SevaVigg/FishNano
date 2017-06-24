@@ -7,7 +7,7 @@ num	<- as.numeric( substr( numStr, 1, nchar(numStr)-4) )
 
 dateStr	<- getRegExpSubStr( SourceNameStr, regexpr( "201[0-9]*", SourceNameStr ) )
 
-hourStr	<- getRegExpSubStr( SourceNameStr, regexpr( "[0-9][0-9]* *[hH][pP][fF]", SourceNameStr ) )  #strings contain .hpf suffix
+hourStr	<- getRegExpSubStr( SourceNameStr, regexpr( "[0-9][0-9]* *[hH][pP][fF]", SourceNameStr ) )  #strings contain hpf suffix
 hour	<- as.numeric( substr( hourStr, 1, nchar( hourStr)-3) ) 
 
 dateInd	<- getRegExpSubStr( SourceNameStr, regexpr( " *[0-9][0-9]*-[0-9][0-9]*[\\-]*", SourceNameStr) )  # like " 03-05-" suffix
