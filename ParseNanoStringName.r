@@ -14,17 +14,17 @@ dateInd	<- getRegExpSubStr( SourceNameStr, regexpr( " *[0-9][0-9]*-[0-9][0-9]*[\
 dateInd <- getRegExpSubStr( dateInd, regexpr( "[0-9][0-9]*-[0-9][0-9]*", dateInd ) )			 # like "03-05"
 
 SampleStr	<- getRegExpSubStr( SourceNameStr, regexpr( "sample[s]* *[0-9][0-9]*-[0-9][0-9] *", SourceNameStr) )  	# like "sample[s] 1-2"
-StartSample	<- as.numeric( getRegExpSubStr( SampleStr, regexpr( "[0-9][0-9]*", SampleStr) )	)				# like 1
-EndSample	<- getRegExpSubStr( SampleStr, regexpr( "\\- *[0-9][0-9]*", SampleStr) )			        # like "-2"
-EndSample	<- as.numeric( substr( EndSample, 2, nchar( EndSample) ) )								# like 2
+SampleStart	<- as.numeric( getRegExpSubStr( SampleStr, regexpr( "[0-9][0-9]*", SampleStr) )	)				# like 1
+SampleEnd	<- getRegExpSubStr( SampleStr, regexpr( "\\- *[0-9][0-9]*", SampleStr) )			        # like "-2"
+SampleEnd	<- as.numeric( substr( SampleEnd, 2, nchar( SampleEnd) ) )								# like 2
 
 ans		<- list()
 ans$num 	<- num
 ans$date	<- dateStr
 ans$hour	<- hour
 ans$dateInd	<- dateInd
-ans$StartSample	<- StartSample
-ans$EndSample	<- EndSample
+ans$SampleStart	<- SampleStart
+ans$SampleEnd	<- SampleEnd
 
 ans
 
