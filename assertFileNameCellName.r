@@ -17,9 +17,9 @@ ans <- TRUE
 			" which does not correspond to file SampleEnd ", FileProperties$SampleEnd, "\n") 
 		return(ans <- FALSE)} } )
 
-	lapply( cell_lists, function(x) { if( FileProperties$dateInd != x$dateInd) 
-		{cat( "Error. Cell ", x$num, " has dateInd ", x$dateInd, 
-			" which does not correspond to file dateInd ", FileProperties$dateInd, "\n") 
+	lapply( cell_lists, function(x) { if( FileProperties$dateEx != x$dateEx) 
+		{cat( "Error. Cell ", x$num, " has dateEx ", x$dateEx, 
+			" which does not correspond to file dateEx ", FileProperties$dateEx, "\n") 
 		return(ans <- FALSE)} } )
 
 

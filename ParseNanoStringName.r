@@ -2,27 +2,38 @@ ParseNanoStringName <- function(SourceNameStr){
 
 source("R/getRegExpSubStr.r")
 
-numStr 	<- getRegExpSubStr( SourceNameStr, regexpr( "[0-9][0-9]*.RCC", SourceNameStr) ) 	#strins contain .RCC suffix
+numStr 	<- getRegExpSubStr( SourceNameStr, regexpr( "[0-9][0-9]*.RCC", SourceNameStr) ) 	#strings contain .RCC suffix
 num	<- as.numeric( substr( numStr, 1, nchar(numStr)-4) )
 
-dateStr	<- getRegExpSubStr( SourceNameStr, regexpr( "201[0-9]*", SourceNameStr ) )
+batchStr	<- getRegExpSubStr( SourceNameStr, regexpr( "201[0-9]*", SourceNameStr ) )
 
-hourStr	<- getRegExpSubStr( SourceNameStr, regexpr( "[0-9][0-9]* *[hH][pP][fF]", SourceNameStr ) )  #strings contain hpf suffix
-hour	<- as.numeric( substr( hourStr, 1, nchar( hourStr)-3) ) 
+hpfStr	<- getRegExpSubStr( SourceNameStr, regexpr( "[0-9][0-9]* *[hH][pP][fF]", SourceNameStr ) )  #strings contain hpf suffix
+hpf	<- as.numeric( substr( hpfStr, 1, nchar( hpfStr)-3) ) 
 
-dateInd	<- getRegExpSubStr( SourceNameStr, regexpr( " *[0-9][0-9]*-[0-9][0-9]*[\\-]*", SourceNameStr) )  # like " 03-05-" suffix
-dateInd <- getRegExpSubStr( dateInd, regexpr( "[0-9][0-9]*-[0-9][0-9]*", dateInd ) )			 # like "03-05"
+dateEx	<- getRegExpSubStr( SourceNameStr, regexpr( " *[0-9][0-9]*-[0-9][0-9]*[\\-]*", SourceNameStr) )  # like " 03-05-" suffix
+dateEx <- getRegExpSubStr( dateEx, regexpr( "[0-9][0-9]*-[0-9][0-9]*", dateEx ) )			 # like "03-05"
 
-SampleStr	<- getRegExpSubStr( SourceNameStr, regexpr( "sample[s]* *[0-9][0-9]*-[0-9][0-9] *", SourceNameStr) )  	# like "sample[s] 1-2"
-SampleStart	<- as.numeric( getRegExpSubStr( SampleStr, regexpr( "[0-9][0-9]*", SampleStr) )	)				# like 1
-SampleEnd	<- getRegExpSubStr( SampleStr, regexpr( "\\- *[0-9][0-9]*", SampleStr) )			        # like "-2"
-SampleEnd	<- as.numeric( substr( SampleEnd, 2, nchar( SampleEnd) ) )								# like 2
+if( regexpr( "sample[s]*", SourceNameStr) != -1){
+	SampleStr	<- getRegExpSubStr( SourceNameStr, regexpr( "sample[s]* *[0-9][0-9]*-[0-9][0-9] *", SourceNameStr) )  	# like "sample[s] 1-2"
+	SampleStart	<- as.numeric( getRegExpSubStr( SampleStr, regexpr( "[0-9][0-9]*", SampleStr) )	)			# like 1
+	SampleEnd	<- getRegExpSubStr( SampleStr, regexpr( "\\- *[0-9][0-9]*", SampleStr) )			        # like "-2"
+	SampleEnd	<- as.numeric( substr( SampleEnd, 2, nchar( SampleEnd) ) )						# like 2	
+	
+	}else{															
+	
+	SampleDateStr	<- getRegExpSubStr( SourceNameStr, regexpr( "[0-9][0-9]*-[0-9][0-9]* *[0-9][0-9]*-[0-9][0-9]*", SourceNameStr) ) # like 04-06 1-12
+	SampleStr	<- getRegExpSubStr( SampleDateStr, regexpr( "[0-9][0-9]*-[0-9[0-9]*$", SampleDateStr))				 # like 1-12
+	SampleStart	<- as.numeric( getRegExpSubStr( SampleStr, regexpr( "[0-9][0-9]*", SampleStr) )	)			# like 1
+	SampleEnd	<- getRegExpSubStr( SampleStr, regexpr( "\\- *[0-9][0-9]*", SampleStr) )			        # like "-2"
+	SampleEnd	<- as.numeric( substr( SampleEnd, 2, nchar( SampleEnd) ) )						# like 2
+}					
+
 
 ans		<- list()
-ans$num 	<- num
-ans$date	<- dateStr
-ans$hour	<- hour
-ans$dateInd	<- dateInd
+ans$num 	<- num + SampleStart - 1
+ans$batch	<- batchStr
+ans$hpf		<- hpf
+ans$dateEx	<- dateEx
 ans$SampleStart	<- SampleStart
 ans$SampleEnd	<- SampleEnd
 
