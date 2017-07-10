@@ -1,28 +1,23 @@
 assertFileNameCellName <- function( cell_lists, FileProperties){
 
-ans <- TRUE
+assert 			<- list()
+assert$num		<- TRUE
+assert$SampleStr	<- TRUE
+assert$dateEx		<- TRUE
 
-	lapply( cell_lists, function(x) { if(FileProperties$hpf != x$hpf) 
-		{cat( "Error. Cell ", x$num,  " has hpf ", x$hpf, 
-			" which does not correspond to file hpf ", FileProperties$hpf, "\n") 
-		return(ans <- FALSE)} } )
+assertVar <- function(Var, assert) {
+			lapply( cell_lists, function(x) { 
+					if(FileProperties[[Var]] != x[[Var]]) {
+						cat( "Error. Cell ", x[[Var]],  " has ", Var," ", x[[Var]], 
+						     " which does not correspond to file ", Var, " ", FileProperties[[Var]], "\n") 
+						return( assert[[Var]] <- FALSE ) 
+									}
+							} 
+				)
+			}
 
-	lapply( cell_lists, function(x) { if( FileProperties$SampleStart != x$SampleStart) 
-		{cat( "Error. Cell ", x$num, " has SampleStart ", x$SampleStart, 
-			" which does not correspond to file SampleStart ", FileProperties$SampleStart, "\n") 
-		return(ans <- FALSE)} } )
+assertRes	<-sapply( names(assert), function(x) assertVar(x, assert))
 
-	lapply( cell_lists, function(x) { if( FileProperties$SampleEnd != x$SampleEnd) 
-		{cat( "Error. Cell ", x$num, " has SampleEnd ", x$SampleEnd, 
-			" which does not correspond to file SampleEnd ", FileProperties$SampleEnd, "\n") 
-		return(ans <- FALSE)} } )
-
-	lapply( cell_lists, function(x) { if( FileProperties$dateEx != x$dateEx) 
-		{cat( "Error. Cell ", x$num, " has dateEx ", x$dateEx, 
-			" which does not correspond to file dateEx ", FileProperties$dateEx, "\n") 
-		return(ans <- FALSE)} } )
-
-
-ans
+assert
 }
 
