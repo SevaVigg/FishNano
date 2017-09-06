@@ -1,18 +1,21 @@
+ReadSourceFiles <- function(SourcePath){
+
+# This function creates a list of two tables: CellTable$Genes , containing gene counts, CellTable$Cells , containing Cell descriptions, and 
+# Genes containing gene descriptions. 
+
 source("R/ReadNanoStringFile.r")
 source("R/findDuplicated.r")
+source("R/writeDupFile.r")
 
-StartDir <- getwd()
-
-RawPath 	<- file.path( StartDir, "Source", "Raw", "Zerbra_fish_cells")
-SourcePath	<- file.path( RawPath, "All")
-#FilteredPath	<- file.path( RawPath, "Filtered")
-BadPath		<- file.path( RawPath, "BadFiles")
-ResPath		<- file.path( StartDir, "Res")
+RawPath		<- file.path( SourcePath, "All")
+#FilteredPath	<- file.path( SourcePath, "Filtered")
+BadPath		<- file.path( SourcePath, "BadFiles")
+ResPath		<- file.path( SourcePath, "Res")
 
 dir.create( BadPath, showWarnings = FALSE)
 dir.create( ResPath, showWarnings = FALSE)
 
-filenames <- list.files(path = SourcePath, pattern=".csv$", full.names = TRUE )
+filenames <- list.files(path = RawPath, pattern=".csv$", full.names = TRUE )
 
 for( FileName in filenames){								#find the first correct file
 	CellTable       <- ReadNanoStringFile( FileName)
@@ -29,34 +32,30 @@ for( FileName in filenames){
 	if(is.na(NewTable)){file.rename(from = FileName,  to = file.path( BadPath, basename(FileName))); next }
 
 	
-	if( !all(unlist(lapply( rownames(NewTable$CellDescs), function(Var) {
-			if( all(!is.element(NewTable$CellDescs[Var,], CellTable$CellDescs[Var,])) 
-			    & identical(CellTable$GenesProbes, NewTable$GenesProbes)){
+	if( !all(unlist(lapply( rownames(NewTable$Cells), function(Var) {
+			if( all(!is.element(NewTable$Cells[Var,], CellTable$Cells[Var,])) 
+			    & identical(CellTable$Genes, NewTable$Genes)){
 			return( TRUE)}else{return(FALSE)}
 								})))){
-			CellTable$genes <- cbind(CellTable$genes, NewTable$genes)
-			CellTable$CellDescs <- cbind(CellTable$CellDescs, NewTable$CellDescs)
+			CellTable$Genes <- cbind(CellTable$Genes, NewTable$Genes)
+			CellTable$Cells <- cbind(CellTable$Cells, NewTable$Cells)
 	    }else{
 		cat(FileName, " already present", "\n")
 	}
 }
 
-dupTable  		<- findDuplicated(CellTable)					#Save duplicated entries
-dupRecord		<- data.frame( 	unlist(CellTable$CellDescs["FileName",dupTable[1,]]), 
-					unlist(CellTable$CellDescs["batch", dupTable[1,]]),
-					unlist(CellTable$CellDescs["num", dupTable[1,]]),
-					unlist(CellTable$CellDescs["FileName", dupTable[2,]]), 
-					unlist(CellTable$CellDescs["batch", dupTable[2,]]), 
-					unlist(CellTable$CellDescs["num", dupTable[2,]])	)
-names(dupRecord)	<- c("File1", "batch1", "num1", "File2", "batch2", "num2")
+DescNames		<- rownames(CellTable$Cells)
 
-dupFileName		<- paste0( ResPath, .Platform$file.sep, "Duplicates", ".csv" )
-dupFile			<- file(dupFileName, open = "w")
-write.table( dupRecord, file = dupFile, sep = "\t", row.names = FALSE)
-close(dupFile)
+Genes 			<- as.data.frame(lapply(CellTable$Genes, unlist), stringsAsFactors = FALSE)
+rownames(Genes)		<- CellTable$Probes[, "Gene Name"] 
+CellTable$Cells 	<- as.data.frame(lapply(CellTable$Cells, unlist), stringsAsFactors = FALSE)
+CellTable$Cells		<- as.data.frame(lapply(CellTable$Cells, as.character), stringsAsFactors = FALSE)
+CellTable$Probes	<- as.data.frame(lapply(CellTable$Probes, as.character), stringsAsFactor = FALSE)
+rownames(CellTable$Cells)	<- DescNames
 
-CellTable$genes 	<- CellTable$genes[-dupTable[2,]]
-CellTable$CellDescs 	<- CellTable$CellDescs[-dupTable[2,]]
+ans <- CellTable
+
+} #main
 
 
 

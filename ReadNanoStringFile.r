@@ -42,7 +42,7 @@ source("R/classNames.r")					#the array with names equeal to gene names
 		 cat( "Removing ", length(ForwardStrInds), " empty string in the beginning", FileName, "\n")
 		}else{ cat( "No initial strings to remove", "\n")}
 
-	#Now check if all genes are here
+	#Now check if all Genes are here
 
 	if( length( setdiff( names(className), data$"Gene Name") )>0 ){
 		cat("Genes ", setdiff(names(className), data$"Gene Name"), " are missing in ", FileName, "\n")
@@ -50,7 +50,7 @@ source("R/classNames.r")					#the array with names equeal to gene names
 	if( length( setdiff( data$"Gene Name", names(className) ))>0 ){
 		cat("Warning: Genes ", setdiff(data$"Gene Name", names(className)), " are redundant in ", FileName, "\n")}
 
-	#remove extra strings, keep only the genes that are in the className
+	#remove extra strings, keep only the Genes that are in the className
 
 	data <- data[data$"Gene Name" %in% names(className),]
 	
@@ -68,7 +68,7 @@ source("R/classNames.r")					#the array with names equeal to gene names
 		cat("Class Name is missing in ", FileName, " updated from className", "\n")
 	}
 
-	CellDescs	<- lapply( cell_lists, function(testCell){
+	Cells	<- lapply( cell_lists, function(testCell){
 					cat( testCell$"num", "\t")
 					asrtCell <- assertFileNameCellName(testCell, FileProperties)
 					testCell_ans <- lapply( names(asrtCell), function(Var){
@@ -90,13 +90,13 @@ source("R/classNames.r")					#the array with names equeal to gene names
 								}
 				)
 
-	if( length( which( CellDescs %in% FALSE)) != 0){
+	if( length( which( Cells %in% FALSE)) != 0){
 		ans <- NA
-		attr(ans, "diagn") <- attr(CellDescs[[ which( CellDescs %in% FALSE)[1] ]], "type")
+		attr(ans, "diagn") <- attr(Cells[[ which( Cells %in% FALSE)[1] ]], "type")
 		return(ans)
 		}
 	
-	CellDesc	   	<- as.data.frame( do.call(cbind, CellDescs))
+	CellDesc	   	<- as.data.frame( do.call(cbind, Cells))
 	rownames(CellDesc) 	<- names(FileProperties)
 	CellDesc		<- rbind(CellDesc, basename(FileName))	
 	rownames(CellDesc)[nrow(CellDesc)] <- "FileName"
@@ -110,12 +110,12 @@ source("R/classNames.r")					#the array with names equeal to gene names
 
 
 
-	GenesProbes	<- data[,c("Gene Name", "Annotation", "Accession #", "Class Name", "Target Sequence")]
+	Probes	<- data[,c("Gene Name", "Annotation", "Accession #", "Class Name", "Target Sequence")]
 
 
-	ans$genes	<- resTable	
-	ans$CellDescs	<- CellDesc
-	ans$GenesProbes	<- GenesProbes
+	ans$Genes	<- resTable	
+	ans$Cells	<- CellDesc
+	ans$Probes	<- Probes
 	
 	ans
 }				#main
