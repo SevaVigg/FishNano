@@ -1,3 +1,4 @@
+
 plotDir <- file.path(getwd(), "Plot")
 SNEdropDir <- file.path(getwd(), "Plot", "tSNEdrop")
 
@@ -12,14 +13,21 @@ drawDir <- SNEdropDir
 source("R/seurat_new.r")
 ipmc_orig <- ipmc_nh
 source("R/TSNEClusters.r")
+
+c48_drop 	<- which(ipmc_nh@ident %in% c(4,5,6,7,8))
+c48_keep	<- which( ! ipmc_nh@ident %in% c(4,5,6,7,8))
+
 ipmc_48 <- SubsetData(ipmc_orig, cells.use = ipmc_orig@meta.data$cellNames[c48_keep])
 ipmc_48 <- RunTSNE(ipmc_48, genes.use = rownames(ipmc_48@data))
 ipmc_48 <- FindClusters(ipmc_48, genes.use = rownames(ipmc_48@data), k.param = 8, k.scale = 1000)
 ipmc_48 <- BuildClusterTree(ipmc_48, genes.use = rownames(ipmc_48@data), do.reorder = TRUE, reorder.numeric = TRUE)
 
-Cells <- rbind(Cells[,c48_keep], ipmc_48@ident)
-rownames(Cells)[length(rownames(Cells))]	<- "id_ipmc_48"
-
+Cells_48 <- rbind(Cells[,c48_keep], ipmc_48@ident)
+Genes_48 <- Genes_nh[, c48_keep]
+colnames(Genes_48) <- paste0( ipmc_48@ident, "_", colnames(Genes_48) )
+rownames(Cells_48)[length(rownames(Cells_48))]	<- "id_ipmc_48"
+write.table(Cells_48, file = file.path( resDir, "CellClusters_drop48.tsv"), sep = "\t")
+write.table(Genes_48, file = file.path( resDir, "genes_drop48.tsv"), sep = "\t")
 
 png(paste0(drawDir, .Platform$file.sep, "clusterTree.png"))
 	ipmc_48 <- BuildClusterTree(ipmc_48, genes.use = allGenes, do.reorder = TRUE,reorder.numeric = TRUE)
