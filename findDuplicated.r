@@ -3,8 +3,8 @@ findDuplicated <- function(CellTable){
 
 source("R/writeDupFile.r")	
 
-	dupInd 		<- which(duplicated(t(CellTable$genes)))
-	dupTable	<- apply(CellTable$genes[dupInd], 2, function(y) {which(apply(CellTable$genes,2, function(x) all(x == y)))})
+	dupInd 		<- which(duplicated(t(CellTable$Genes)))
+	dupTable	<- apply(CellTable$Genes[dupInd], 2, function(y) {which(apply(CellTable$Genes,2, function(x) all(x == y)))})
 
 	dupRecord		<- data.frame( 	unlist(CellTable$Cells["FileName",dupTable[1,]]), 
 					unlist(CellTable$Cells["batch", dupTable[1,]]),

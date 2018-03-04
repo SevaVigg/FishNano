@@ -1,6 +1,5 @@
 ReadSourceFiles <- function(SourcePath){
 
-# This function creates a list of two tables: CellTable$Genes , containing gene counts, CellTable$Cells , containing Cell descriptions, and 
 # Genes containing gene descriptions. 
 
 source("R/ReadNanoStringFile.r")

@@ -23,6 +23,8 @@ rownames(Genes)	<- geneNames
 Cells[,1]	<- NULL
 Genes[,1]	<- NULL
 
+
+# We have a number of x18 cells with missing mitfa values; these values are updated as medians
 X18_mitfa 	<- Genes["mitfa", grep("X18", colnames(Genes))]
 X18_mitfa_med	<- median(as.numeric(X18_mitfa["mitfa", !is.na(X18_mitfa[1,])]))
 Genes["mitfa", is.na(Genes["mitfa",])] <- X18_mitfa_med
