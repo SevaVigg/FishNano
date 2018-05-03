@@ -6,7 +6,7 @@ plotDir	<- file.path(getwd(), "Plot", "PCAClusterPlot")
 ipmc <- RunPCA(object = ipmc, pc.genes = allGenes, pcs.compute = 20, do.print = FALSE)
 
 #Draw initial TSNEPlot
-comps		<- 6 
+comps		<- 5 
 
 ipmc <- RunTSNE(ipmc, dims.use = 1:comps, do.fast = FALSE)
 
