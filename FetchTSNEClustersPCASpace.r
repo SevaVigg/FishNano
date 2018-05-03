@@ -14,15 +14,15 @@ plotDir	<- file.path(getwd(), "Plot", "PCAClusterPlot")
 
 #Fetch Clusters
 
-resolDec	<- 75			#resolution multiplied by 10, needed to mark files
+#resolDec	<- 75			#resolution multiplied by 10, needed to mark files
 ipmc	 	<- FindClusters(ipmc, reduction.type = "pca", dims.use = 1:comps, resolution = resolDec/10, print.output = 0)
 
 png(file.path(plotDir, paste0("SNN_ClusterTreePCAS", "_c", comps, "_r", resolDec, ".png")))
 	ipmc 	<- BuildClusterTree(ipmc, pcs.use = 1:comps, do.reorder = TRUE, reorder.numeric = TRUE, show.progress = FALSE)
 dev.off()
 
-Cells <- rbind(Cells, ipmc@ident)
-rownames(Cells)[length(rownames(Cells))]	<- paste0("ClusterPCASp", "_c", comps, "_r", resolDec)
+#Cells <- rbind(Cells, ipmc@ident)
+#rownames(Cells)[length(rownames(Cells))]	<- paste0("ClusterPCASp", "_c", comps, "_r", resolDec)
 
 png(file.path(plotDir, paste0("TSNE_ClustersPCAS", "_c", comps, "_r", resolDec, ".png")))
 	TSNEPlot(ipmc)
