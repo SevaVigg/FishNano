@@ -21,9 +21,6 @@ png(file.path(plotDir, paste0("SNN_ClusterTreePCAS", "_c", comps, "_r", resolDec
 	ipmc 	<- BuildClusterTree(ipmc, pcs.use = 1:comps, do.reorder = TRUE, reorder.numeric = TRUE, show.progress = FALSE)
 dev.off()
 
-#Cells <- rbind(Cells, ipmc@ident)
-#rownames(Cells)[length(rownames(Cells))]	<- paste0("ClusterPCASp", "_c", comps, "_r", resolDec)
-
 png(file.path(plotDir, paste0("TSNE_ClustersPCAS", "_c", comps, "_r", resolDec, ".png")))
 	TSNEPlot(ipmc)
 dev.off()

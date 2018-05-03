@@ -8,6 +8,7 @@
 require(Seurat)
 require(methods)
 
+
 plotDir <- file.path(getwd(), "Plot")
 resDir	<- file.path(getwd(), "Res")
 
@@ -31,7 +32,8 @@ newTypes   	<- c("18", "21", "24", "Tl", "30", "W2", "m6", "36", "48", "I", "M",
 names(newTypes)	<- types
 
 allGenes	<- rownames(Genes)
-logExps 	<- log10(1+Genes)
+
+logExps 	<- log2(1+Genes)
 
 ipmc    	<- CreateSeuratObject( raw.data = as.matrix(logExps) )
 ipmc    	<- AddMetaData( object = ipmc, t(Cells), col.name = rownames(Cells) )
