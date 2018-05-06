@@ -23,7 +23,7 @@ slingObj_MD 	<- slingshot(tSNEVals_MD, clust, start.clus = clustTypes["Tl"],end.
 source("R/setClusterColors.r")
 cellColors <- setClusterColors(ipmc, clustTypes)
 
-ipmc_2D		<- ipmc(ipmc, dims.use = 1:comps, theta = 0, perplexity = 15, dim.embed = 2)
+ipmc_2D		<- RunTSNE(ipmc, dims.use = 1:comps, theta = 0, perplexity = 15, dim.embed = 2)
 plotVals	<- ipmc_2D@dr$tsne@cell.embeddings  
 
 plot( plotVals[,2]~plotVals[,1], cex = 0.7, pch = 16, col = cellColors)
